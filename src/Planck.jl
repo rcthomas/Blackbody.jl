@@ -3,7 +3,7 @@ module Planck
 
 using PhysicalConstants
 
-export PerHertz, PerAngstrom, planck
+export PerHertz, PerAngstrom, planck, planck2
 
 const c0 = PhysicalConstants.CGS.PlancksConstantH * PhysicalConstants.CGS.SpeedOfLight
 const c1 = 2.0 * c0
@@ -29,18 +29,23 @@ Planck (blackbody) spectral radiance or specific intensity in CGS units.
     Returns:
         Array{Float64,1}: Spectral radiance in erg cm^-2 sr^-1 Hz^-1 or AA^-1.
 """
-function planck{T<:Number}( wavelength::Array{T,1}, temperature::Number, output::PerUnit )
+function planck{T1<:Number,T2<:PerUnit}( wavelength::Array{T1,1}, temperature::Number, output::Type{T2} )
     impl( 1.0e8 ./ wavelength, temperature, output )
 end
 
-function impl{T<:Number}( x::Array{T,1}, temperature::Number, output::PerHertz )
-    c1 .* x .^ 3 ./ expm1( c2 .* x ./ temperature )
+function impl{T<:Number}( x::Array{T,1}, temperature::Number, output::Type{PerHertz} )
+    c1 * x .^ 3 ./ expm1( c2 .* x ./ temperature )
 end
 
-function impl{T<:Number}( x::Array{T,1}, temperature::Number, output::PerAngstrom )
+function impl{T<:Number}( x::Array{T,1}, temperature::Number, output::Type{PerAngstrom} )
     c1 .* x .^ 5 ./ expm1( c2 .* x ./ temperature )
 end
 
 # TODO Wien's displacement law too.  Also B_nu/lambda(nu) but who uses that...?
 
 end
+
+#using Planck
+#
+#wavelengths = collect( linspace( 1000.0, 10000.0, 10 ) )
+#println( planck( wavelengths, 5000.0, PerHertz ) )

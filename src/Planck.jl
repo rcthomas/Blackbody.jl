@@ -1,14 +1,14 @@
-
 module Planck
 
 using PhysicalConstants
 
-export PerHertz, PerAngstrom, planck, planck2
+export PerHertz, PerAngstrom, planck, wien
 
 const c0 = PhysicalConstants.CGS.PlancksConstantH * PhysicalConstants.CGS.SpeedOfLight
 const c1 = 2.0 * c0
 const c2 = c0 / PhysicalConstants.CGS.Boltzmann
-const b  = 1.0e8 * c2 / 4.965114231744276
+const b1 = 1.0e8 * c2 / 2.821439372
+const b2 = 1.0e8 * c2 / 4.965114231744276
 
 abstract PerUnit
 
@@ -22,30 +22,38 @@ end
 Planck (blackbody) spectral radiance or specific intensity in CGS units.
 
     Args:
-        wavelength (Array{Number,1}): Wavelengths in Angstroms.
+        wavelength (Array{Number,1} or Number): Wavelength(s) in Angstroms.
         temperature (Number): Temperature in Kelvin.
-        output (PerUnit): Output convention (PerHertz or PerAngstrom).
+        output (Type{PerUnit}): Output convention (PerHertz or PerAngstrom).
     
     Returns:
-        Array{Float64,1}: Spectral radiance in erg cm^-2 sr^-1 Hz^-1 or AA^-1.
+        Array{Float64,1} or Float64: Planck spectral radiance in CGS units.
 """
 function planck{T1<:Number,T2<:PerUnit}( wavelength::Array{T1,1}, temperature::Number, output::Type{T2} )
-    impl( 1.0e8 ./ wavelength, temperature, output )
+    [ planck( 1.0e8 / wavelength[ i ], temperature, output ) for i = 1:length( wavelength ) ]
 end
 
-function impl{T<:Number}( x::Array{T,1}, temperature::Number, output::Type{PerHertz} )
-    c1 * x .^ 3 ./ expm1( c2 .* x ./ temperature )
+function planck( x::Number, temperature::Number, output::Type{PerHertz} )
+    c1 * x ^ 3 / expm( c2 * x / temperature )
 end
 
-function impl{T<:Number}( x::Array{T,1}, temperature::Number, output::Type{PerAngstrom} )
-    c1 .* x .^ 5 ./ expm1( c2 .* x ./ temperature )
+function planck( x::Number, temperature::Number, output::Type{PerAngstrom} )
+    c1 * x ^ 5 / expm( c2 * x / temperature )
 end
 
-# TODO Wien's displacement law too.  Also B_nu/lambda(nu) but who uses that...?
+"""
+Wavelength at the maximum Planck spectral radiance for a given temperature
+(Wien's displacement law).
+
+    Args:
+        temperature (Number): Temperature in Kelvin.
+        output (Type{PerUnit}): Unit convention (PerHertz or PerAngstrom).
+    
+    Returns:
+        Float64: Wavelength at maximum Planck spectral radiance in Angstroms.
+"""
+wien( temperature::Number, output::Type{PerHertz} ) = b1 / temperature
+
+wien( temperature::Number, output::Type{PerAngstrom} ) = b2 / temperature
 
 end
-
-#using Planck
-#
-#wavelengths = collect( linspace( 1000.0, 10000.0, 10 ) )
-#println( planck( wavelengths, 5000.0, PerHertz ) )

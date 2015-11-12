@@ -41,4 +41,6 @@ function impl{T<:Number}( x::Array{T,1}, temperature::Number, output::PerAngstro
     c1 .* x .^ 5 ./ expm1( c2 .* x ./ temperature )
 end
 
+# TODO Wien's displacement law too.  Also B_nu/lambda(nu) but who uses that...?
+
 end

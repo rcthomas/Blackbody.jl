@@ -33,11 +33,11 @@ function planck{T<:Number}( wavelength::Array{T,1}, temperature::Number, output:
     impl( 1.0e8 ./ wavelength, temperature, output )
 end
 
-function impl{T<:Number}( x{T,1}, temperature::Number, output::PerHertz )
+function impl{T<:Number}( x::Array{T,1}, temperature::Number, output::PerHertz )
     c1 .* x .^ 3 ./ expm1( c2 .* x ./ temperature )
 end
 
-function impl{T<:Number}( x{T,1}, temperature::Number, output::PerAngstrom )
+function impl{T<:Number}( x::Array{T,1}, temperature::Number, output::PerAngstrom )
     c1 .* x .^ 5 ./ expm1( c2 .* x ./ temperature )
 end
 

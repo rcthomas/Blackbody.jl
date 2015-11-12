@@ -1,4 +1,4 @@
-module Planck
+module Blackbody
 
 using PhysicalConstants
 

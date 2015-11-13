@@ -12,6 +12,8 @@ const c2  = c0 / PhysicalConstants.CGS.Boltzmann
 const b1 = 1.0e8 * c2 / 2.821439372
 const b2 = 1.0e8 * c2 / 4.965114231744276
 
+const sp = PhysicalConstants.CGS.StefanBoltzmannConstant / pi
+
 abstract PerUnit
 
 immutable PerHertz <: PerUnit
@@ -59,6 +61,17 @@ Wavelength at the maximum Planck spectral radiance for a given temperature
 wien( temperature::Number, output::Type{PerHertz} ) = b1 / temperature
 
 wien( temperature::Number, output::Type{PerAngstrom} ) = b2 / temperature
+
+"""
+Stefan-Boltzmann law.
+
+    Args:
+        temperature (Number): Temperature in Kelvin.
+
+    Returns:
+        Float64: Blackbody radiance in CGS units (power over pi).
+"""
+stefan_boltzmann( temperature::Number ) = sp * temperature ^ 4
 
 end
 

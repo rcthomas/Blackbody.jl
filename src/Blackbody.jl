@@ -6,7 +6,7 @@ export PerHertz, PerAngstrom, planck, wien
 
 const c0  = PhysicalConstants.CGS.PlancksConstantH * PhysicalConstants.CGS.SpeedOfLight
 const c1h = 2.0 * c0 * PhysicalConstants.CGS.SpeedOfLight
-const c1a = c1h * 1.0e-8
+const c1a = c1h / 1.0e8
 const c2  = c0 / PhysicalConstants.CGS.Boltzmann
 
 const b1 = 1.0e8 * c2 / 2.821439372
@@ -37,12 +37,12 @@ end
 
 function planck( wavelength::Number, temperature::Number, output::Type{PerHertz} )
     x = 1.0e8 / wavelength
-    c1h * x ^ 3 / expm( c2 * x / temperature )
+    c1h * x ^ 3 / expm1( c2 * x / temperature )
 end
 
 function planck( wavelength::Number, temperature::Number, output::Type{PerAngstrom} )
     x = 1.0e8 / wavelength
-    c1a * x ^ 5 / expm( c2 * x / temperature )
+    c1a * x ^ 5 / expm1( c2 * x / temperature )
 end
 
 """
@@ -60,21 +60,16 @@ wien( temperature::Number, output::Type{PerHertz} ) = b1 / temperature
 
 wien( temperature::Number, output::Type{PerAngstrom} ) = b2 / temperature
 
-println( b2 )
-
 end
 
-using Blackbody
-
+# using Blackbody
+# 
 # wavelengths = collect( logspace( 3, 4, 10000 ) )
 # for ( wl, bb ) in zip( wavelengths, planck( wavelengths, 10000.0, PerAngstrom ) )
 #     println( "$wl $bb" )
 # end
 # println()
-
-wlmax = wien( 10000.0, PerAngstrom )
-println( wlmax, " ", planck( wlmax, 10000.0, PerAngstrom ) )
-println()
-
-
-
+# 
+# wlmax = wien( 10000.0, PerAngstrom )
+# println( wlmax, " ", planck( wlmax, 10000.0, PerAngstrom ) )
+# println()

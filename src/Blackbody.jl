@@ -2,7 +2,11 @@ module Blackbody
 
 using PhysicalConstants
 
-export PerHertz, PerAngstrom, planck, wien
+export  PerHertz, 
+        PerAngstrom, 
+        planck, 
+        wien,
+        stefan_boltzmann
 
 const c0  = PhysicalConstants.CGS.PlancksConstantH * PhysicalConstants.CGS.SpeedOfLight
 const c1h = 2.0 * c0 * PhysicalConstants.CGS.SpeedOfLight

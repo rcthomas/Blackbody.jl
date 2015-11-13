@@ -32,14 +32,16 @@ Planck (blackbody) spectral radiance or specific intensity in CGS units.
         Array{Float64,1} or Float64: Planck spectral radiance in CGS units.
 """
 function planck{T1<:Number,T2<:PerUnit}( wavelength::Array{T1,1}, temperature::Number, output::Type{T2} )
-    [ planck( 1.0e8 / wavelength[ i ], temperature, output ) for i = 1:length( wavelength ) ]
+    [ planck( wavelength[ i ], temperature, output ) for i = 1:length( wavelength ) ]
 end
 
-function planck( x::Number, temperature::Number, output::Type{PerHertz} )
+function planck( wavelength::Number, temperature::Number, output::Type{PerHertz} )
+    x = 1.0e8 / wavelength
     c1h * x ^ 3 / expm( c2 * x / temperature )
 end
 
-function planck( x::Number, temperature::Number, output::Type{PerAngstrom} )
+function planck( wavelength::Number, temperature::Number, output::Type{PerAngstrom} )
+    x = 1.0e8 / wavelength
     c1a * x ^ 5 / expm( c2 * x / temperature )
 end
 
@@ -58,12 +60,21 @@ wien( temperature::Number, output::Type{PerHertz} ) = b1 / temperature
 
 wien( temperature::Number, output::Type{PerAngstrom} ) = b2 / temperature
 
+println( b2 )
+
 end
 
 using Blackbody
 
-wavelengths = collect( logspace( 3, 4, 1000 ) )
-for ( wl, bb ) in zip( wavelengths, planck( wavelengths, 10000.0, PerAngstrom ) )
-    println( "$wl $bb" )
-end
+# wavelengths = collect( logspace( 3, 4, 10000 ) )
+# for ( wl, bb ) in zip( wavelengths, planck( wavelengths, 10000.0, PerAngstrom ) )
+#     println( "$wl $bb" )
+# end
+# println()
+
+wlmax = wien( 10000.0, PerAngstrom )
+println( wlmax, " ", planck( wlmax, 10000.0, PerAngstrom ) )
+println()
+
+
 

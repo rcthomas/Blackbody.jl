@@ -6,6 +6,6 @@ using Base.Test
 
 f( wl ) = planck( wl, 12000.0, PerAngstrom )
 
-@test_approx_eq_eps quadgk( f, 0.0, 1.0e9 )[ 1 ] stefan_boltzmann( 12000.0 ) 1.0e-7
+@test_approx_eq_eps quadgk( f, 0.0, 1.0e9 )[ 1 ] / stefan_boltzmann( 12000.0 ) 1.0 1.0e-14
 
 

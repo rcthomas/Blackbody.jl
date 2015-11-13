@@ -9,7 +9,7 @@ custom_handler( r::Test.Error   ) = rethrow( r )
 Test.with_handler( custom_handler ) do
     for i = 1:20
         temperature = 1000.0 * i
-        println( temperature )
+        @test 1 == 1
         @test_approx_eq_eps quadgk( wl -> planck( wl, temperature, PerAngstrom ), 0.0, 1.0e9 )[ 1 ] / stefan_boltzmann( temperature ) 1.0 1.0e-7
     end
 end

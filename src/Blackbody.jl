@@ -63,8 +63,8 @@ wien( temperature::Number, output::Type{PerAngstrom} ) = b2 / temperature
 end
 
 # using Blackbody
-# 
-# wavelengths = collect( logspace( 3, 4, 10000 ) )
+#
+# wavelengths = collect( logspace( 3, 4, 100000000 ) )
 # for ( wl, bb ) in zip( wavelengths, planck( wavelengths, 10000.0, PerAngstrom ) )
 #     println( "$wl $bb" )
 # end
@@ -72,4 +72,12 @@ end
 # 
 # wlmax = wien( 10000.0, PerAngstrom )
 # println( wlmax, " ", planck( wlmax, 10000.0, PerAngstrom ) )
-# println()
+# println() 
+# 
+# @time planck( wavelengths, 10000.0, PerAngstrom )
+# @time planck( wavelengths, 10000.0, PerAngstrom )
+# @time planck( wavelengths, 10000.0, PerAngstrom )
+# @time planck( wavelengths, 10000.0, PerAngstrom )
+# @time planck( wavelengths, 10000.0, PerAngstrom )
+
+
